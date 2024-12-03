@@ -2,49 +2,34 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -4.0
 
 var rawPosition : Vector2
 
-var supposedToBeGrounded : bool = false
-
-func onFloor() -> bool:
-	return $GroundCast.is_colliding()
-
 func _physics_process(delta: float) -> void:
 	
-	var gravity = Vector2.ZERO
+	#look at closest attractor
+	var closestAttractor = Vector2.INF
 	for i in get_tree().get_nodes_in_group("Gravity Attractors"):
-		if i is GravAttractor:
-			gravity += i.getGravity(global_position)
-			
-	if !onFloor():
-		velocity += gravity * delta
+		if closestAttractor.distance_to(global_position) > i.global_position.distance_to(global_position):
+			closestAttractor = i.global_position
+	
+	var lookatVector = Vector3(0,0,-1).cross(Vector3(closestAttractor.x - global_position.x, closestAttractor.y - global_position.y, 0.0).normalized())
+	print(lookatVector)
+	look_at(Vector2(lookatVector.x, lookatVector.y) + global_position)
+	
+	#movement
+	var direction := Input.get_axis("Left", "Right")
+	if direction:
+		velocity = direction * SPEED * Vector2(cos(rotation), sin(rotation))
 	else:
-		velocity += gravity.normalized() * delta
-		
-	var gravityDir = gravity.normalized() * 30.0
-	
-	if gravity.length() > 1.0:
-		look_at(Vector2(gravityDir.y, -gravityDir.x) + global_position)
-	
-	if supposedToBeGrounded == false and onFloor():
-		print("Set grounded")
-		supposedToBeGrounded = true
-	
-	# Handle jump.
-	if Input.is_action_pressed("ui_accept") and onFloor():
-		velocity += JUMP_VELOCITY * gravityDir
-		print("Deset grounded")
-		supposedToBeGrounded = false
-		
-	if supposedToBeGrounded:
-		print("resetPos")
-		position = $ReGround.get_collision_point() + $ReGround.get_collision_normal() * 12.0
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("ui_left", "ui_right")
-	if direction and onFloor():
-		velocity += direction * SPEED * delta * Vector2(cos(rotation), sin(rotation))
+		velocity.x = move_toward(velocity.x, 0.0, SPEED/2.0)
+		velocity.y = move_toward(velocity.y, 0.0, SPEED/2.0)
 	move_and_slide()
+	
+	#stick to floor
+	if $ReGround.get_collision_point():
+		var point : Vector2 = $ReGround.get_collision_point()
+		point += (point.direction_to(global_position)).normalized() * 12.0
+		
+		global_position = point

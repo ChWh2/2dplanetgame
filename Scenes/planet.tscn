@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://bt64bj0v1ccji"]
+[gd_scene load_steps=7 format=3 uid="uid://bt64bj0v1ccji"]
 
-[ext_resource type="Script" path="res://Scripts/planet.gd" id="1_e6p50"]
 [ext_resource type="Shader" path="res://planet.gdshader" id="2_h1sy1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_csc6h"]
@@ -11,11 +10,14 @@ shader = ExtResource("2_h1sy1")
 shader_parameter/radius = 1.0
 
 [sub_resource type="Gradient" id="Gradient_hsn1c"]
-colors = PackedColorArray(0, 0.721569, 0, 1, 0, 1, 0, 1)
+colors = PackedColorArray(0, 0.435294, 0, 1, 0, 1, 0, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_2hrqb"]
 noise_type = 3
-frequency = 0.0734
+seed = 1
+fractal_lacunarity = 3.0
+fractal_gain = 1.13
+fractal_weighted_strength = 0.59
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fe67u"]
 width = 1000
@@ -24,14 +26,10 @@ color_ramp = SubResource("Gradient_hsn1c")
 noise = SubResource("FastNoiseLite_2hrqb")
 
 [node name="Planet" type="StaticBody2D"]
-script = ExtResource("1_e6p50")
-mass = 7.6
-massPow = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_csc6h")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_2x14c")
-scale = Vector2(0.988281, 1)
 texture = SubResource("NoiseTexture2D_fe67u")

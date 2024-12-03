@@ -1,11 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://g0uiiq7672w1"]
+[gd_scene load_steps=4 format=3 uid="uid://g0uiiq7672w1"]
 
 [ext_resource type="PackedScene" uid="uid://bt64bj0v1ccji" path="res://Scenes/planet.tscn" id="1_4teii"]
 [ext_resource type="PackedScene" uid="uid://cfhrogonp7by0" path="res://Scenes/player.tscn" id="2_jxql8"]
+[ext_resource type="Texture2D" uid="uid://c6eekm3dti5ua" path="res://Assets/360_F_215948377_kgIhNUy4X0iYsyUfYd9KKIViSPOxclbC.jpg" id="3_eqvlc"]
 
 [node name="Space" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+follow_viewport_enabled = true
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+offset_left = -18000.0
+offset_top = -18000.0
+offset_right = 18000.0
+offset_bottom = 18000.0
+texture = ExtResource("3_eqvlc")
+stretch_mode = 1
 
 [node name="Planet" parent="." groups=["Gravity Attractors"] instance=ExtResource("1_4teii")]
 
 [node name="Player" parent="." instance=ExtResource("2_jxql8")]
 position = Vector2(0, -542)
+
+[node name="Planet2" parent="." groups=["Gravity Attractors"] instance=ExtResource("1_4teii")]
+position = Vector2(-1110, 7)
