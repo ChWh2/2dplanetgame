@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://g0uiiq7672w1"]
+
+[ext_resource type="PackedScene" uid="uid://bt64bj0v1ccji" path="res://Scenes/planet.tscn" id="1_4teii"]
+[ext_resource type="PackedScene" uid="uid://cfhrogonp7by0" path="res://Scenes/player.tscn" id="2_jxql8"]
+
+[node name="Space" type="Node2D"]
+
+[node name="Planet" parent="." groups=["Gravity Attractors"] instance=ExtResource("1_4teii")]
+
+[node name="Player" parent="." instance=ExtResource("2_jxql8")]
+position = Vector2(0, -542)
