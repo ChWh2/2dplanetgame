@@ -1,25 +1,62 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfhrogonp7by0"]
+[gd_scene load_steps=8 format=3 uid="uid://cfhrogonp7by0"]
 
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_ywnlj"]
-[ext_resource type="Texture2D" uid="uid://fk6ooc8havq7" path="res://icon.svg" id="2_0bmkp"]
+[ext_resource type="Texture2D" uid="uid://83uimhnrduie" path="res://Assets/Astronaut.png" id="2_wu33n"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_2we70"]
-radius = 12.0
+[sub_resource type="AtlasTexture" id="AtlasTexture_0q4pe"]
+atlas = ExtResource("2_wu33n")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_js0xh"]
+atlas = ExtResource("2_wu33n")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ks6ar"]
+atlas = ExtResource("2_wu33n")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7krha"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0q4pe")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_js0xh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ks6ar")
+}],
+"loop": true,
+"name": &"run",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e3fym"]
+size = Vector2(26, 30)
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_ywnlj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_0bmkp")
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_7krha")
+autoplay = "run"
+frame_progress = 0.913422
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_2we70")
+shape = SubResource("RectangleShape2D_e3fym")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 ignore_rotation = false
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(2.5, 2.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 rotation_smoothing_enabled = true

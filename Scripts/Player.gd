@@ -6,6 +6,8 @@ const JUMP_VELOCITY = -4.0
 
 var rawPosition : Vector2
 
+@onready var sprite_2d = $Sprite2D
+
 func setPhysicsProcess(b : bool):
 	set_physics_process(b)
 
@@ -24,8 +26,20 @@ func _physics_process(delta: float) -> void:
 	#movement
 	var direction := Input.get_axis("Left", "Right")
 	if direction:
-		velocity = direction * SPEED * Vector2(cos(rotation), sin(rotation))
+		sprite_2d.animation = "run"
+		
+		if direction > 0:
+			sprite_2d.flip_h = true
+		else:
+			sprite_2d.flip_h = false
+		
+		var velVector = direction * SPEED * Vector2(cos(rotation), sin(rotation))
+		var velDir = velVector.normalized()
+		
+		velocity.x = move_toward(velocity.x, velVector.x, SPEED/20.0)
+		velocity.y = move_toward(velocity.y, velVector.y, SPEED/20.0)
 	else:
+		sprite_2d.animation = "default"
 		velocity.x = move_toward(velocity.x, 0.0, SPEED/2.0)
 		velocity.y = move_toward(velocity.y, 0.0, SPEED/2.0)
 	move_and_slide()
@@ -33,6 +47,6 @@ func _physics_process(delta: float) -> void:
 	#stick to floor
 	if $ReGround.get_collision_point():
 		var point : Vector2 = $ReGround.get_collision_point()
-		point += (point.direction_to(global_position)).normalized() * 12.0
+		point += (point.direction_to(global_position)).normalized() * 15.0
 		
 		global_position = point
