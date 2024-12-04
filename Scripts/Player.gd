@@ -6,6 +6,9 @@ const JUMP_VELOCITY = -4.0
 
 var rawPosition : Vector2
 
+func setPhysicsProcess(b : bool):
+	set_physics_process(b)
+
 func _physics_process(delta: float) -> void:
 	
 	#look at closest attractor

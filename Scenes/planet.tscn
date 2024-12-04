@@ -1,6 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://bt64bj0v1ccji"]
+[gd_scene load_steps=9 format=3 uid="uid://bt64bj0v1ccji"]
 
 [ext_resource type="Shader" path="res://planet.gdshader" id="2_h1sy1"]
+
+[sub_resource type="Gradient" id="Gradient_usl0m"]
+offsets = PackedFloat32Array(0.636364, 0.87013, 1)
+colors = PackedColorArray(0, 0.619608, 1, 1, 0, 0.419608, 1, 1, 0, 0.419608, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_x6vqs"]
+gradient = SubResource("Gradient_usl0m")
+width = 2000
+height = 2000
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_csc6h"]
 radius = 500.0
@@ -26,6 +38,10 @@ color_ramp = SubResource("Gradient_hsn1c")
 noise = SubResource("FastNoiseLite_2hrqb")
 
 [node name="Planet" type="StaticBody2D"]
+
+[node name="Attmosphere" type="Sprite2D" parent="."]
+z_index = -1
+texture = SubResource("GradientTexture2D_x6vqs")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_csc6h")

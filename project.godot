@@ -19,10 +19,6 @@ config/icon="res://icon.svg"
 
 Constants="*res://Scripts/constants.gd"
 
-[display]
-
-window/stretch/mode="viewport"
-
 [global_group]
 
 "Gravity Attractors"="Anything with gravity"
