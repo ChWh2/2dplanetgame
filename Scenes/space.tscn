@@ -15,15 +15,17 @@ texture = ExtResource("3_eqvlc")
 region_enabled = true
 region_rect = Rect2(0, 0, 1e+06, 1e+06)
 
-[node name="Rocket" parent="." instance=ExtResource("4_65s3p")]
+[node name="Rocket" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("4_65s3p")]
 position = Vector2(86, -513)
+currentPlanet = NodePath("../Planets/Planet")
 
-[node name="Player" parent="." instance=ExtResource("2_jxql8")]
+[node name="Player" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("2_jxql8")]
 position = Vector2(0, -542)
+currentPlanet = NodePath("../Planets/Planet")
 
 [node name="Planets" type="Node2D" parent="."]
 
-[node name="Planet" parent="Planets" groups=["Gravity Attractors"] instance=ExtResource("1_4teii")]
+[node name="Planet" parent="Planets" instance=ExtResource("1_4teii")]
 
-[node name="Planet2" parent="Planets" groups=["Gravity Attractors"] instance=ExtResource("1_4teii")]
+[node name="Planet2" parent="Planets" instance=ExtResource("1_4teii")]
 position = Vector2(-1600, -1000)

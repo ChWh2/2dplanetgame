@@ -1,13 +1,40 @@
-[gd_scene load_steps=4 format=3 uid="uid://c5v57mj8ck34t"]
+[gd_scene load_steps=7 format=3 uid="uid://c5v57mj8ck34t"]
 
 [ext_resource type="Texture2D" uid="uid://diuj5iqswx4os" path="res://Assets/Rocket.png" id="1_033wf"]
 [ext_resource type="Script" path="res://Scripts/rocket.gd" id="1_sg4jg"]
+[ext_resource type="FontFile" uid="uid://do0tmjdsjqtf0" path="res://Assets/Tiny5-Regular.ttf" id="3_laq6e"]
+
+[sub_resource type="Gradient" id="Gradient_8akuu"]
+offsets = PackedFloat32Array(0.266667, 1)
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fw5q3"]
 size = Vector2(70, 88)
 
+[sub_resource type="LabelSettings" id="LabelSettings_pf0gp"]
+font = ExtResource("3_laq6e")
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
 [node name="Rocket" type="Area2D"]
 script = ExtResource("1_sg4jg")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(-3, 3)
+rotation = 1.5708
+emitting = false
+amount = 2000
+lifetime = 0.31
+lifetime_randomness = 0.44
+emission_shape = 3
+emission_rect_extents = Vector2(8, 0)
+spread = 59.54
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+damping_min = 0.1
+damping_max = 0.1
+color_ramp = SubResource("Gradient_8akuu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -39.5)
@@ -22,3 +49,31 @@ texture = ExtResource("1_033wf")
 [node name="ReGround" type="RayCast2D" parent="."]
 target_position = Vector2(0, 1000)
 hit_from_inside = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -39.5)
+ignore_rotation = false
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+rotation_smoothing_enabled = true
+rotation_smoothing_speed = 10.0
+
+[node name="takeOff" type="Timer" parent="."]
+one_shot = true
+
+[node name="Label" type="Label" parent="."]
+visible = false
+texture_filter = 1
+offset_left = -28.0
+offset_top = -50.0
+offset_right = 28.0
+offset_bottom = -27.0
+text = "ENTER?"
+label_settings = SubResource("LabelSettings_pf0gp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="timeout" from="takeOff" to="." method="_on_take_off_timeout"]

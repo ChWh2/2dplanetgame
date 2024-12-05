@@ -1,17 +1,89 @@
 extends Area2D
+class_name rocket
 
-func _physics_process(delta):
-	var closestAttractor = Vector2.INF
-	for i in get_tree().get_nodes_in_group("Gravity Attractors"):
-		if closestAttractor.distance_to(global_position) > i.global_position.distance_to(global_position):
-			closestAttractor = i.global_position
+var plr : player
+
+var flying = false
+var tookOff = false
+
+const SPEED = 300.0
+const ROTSPEED = 3.0
+
+var velocity = 0.0
+var angularVelocity = 0.0
+
+@onready var camera_2d: Camera2D = $Camera2D
+@onready var take_off: Timer = $takeOff
+
+@export var currentPlanet : planet
+
+func _ready():
+	land()
+
+func land() -> void:
+	velocity = 0.0
+	angularVelocity = 0.0
 	
-	var lookatVector = Vector3(0,0,-1).cross(Vector3(closestAttractor.x - global_position.x, closestAttractor.y - global_position.y, 0.0).normalized())
-	print(lookatVector)
-	look_at(Vector2(lookatVector.x, lookatVector.y) + global_position)
+	var lookatVector = Vector2(currentPlanet.global_position.y - global_position.y, global_position.x - currentPlanet.global_position.x)
+	look_at(lookatVector + global_position)
 	
-	if $ReGround.get_collision_point():
-		var point : Vector2 = $ReGround.get_collision_point()
-		point += (point.direction_to(global_position)).normalized()
+	var stickDir = currentPlanet.global_position.direction_to(global_position)
+	global_position = currentPlanet.global_position + stickDir * (currentPlanet.radius * 2.0)
+
+func fly(delta : float):
+	var direction := Input.get_axis("Left", "Right")
+	angularVelocity = move_toward(angularVelocity, ROTSPEED, ROTSPEED/200.0)
+	if direction:
+		rotate(direction * delta * angularVelocity)
+	
+	velocity = move_toward(velocity, SPEED, SPEED/200.0)
+	position += delta * velocity * Vector2(sin(rotation), -cos(rotation))
+
+func _physics_process(delta: float) -> void:
+	if flying and tookOff:
+		fly(delta)
+	
+	elif Input.is_action_just_pressed("Interact") and plr and not flying:
+		$Label.visible = false
+		plr.set_physics_process(false)
+		plr.visible = false
+		camera_2d.make_current()
+		flying = true
+		take_off.start()
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is player and not flying:
+		$Label.visible = true
+		plr = body
+	elif flying and body is planet:
+		$Label.visible = true
+		currentPlanet = body
 		
-		global_position = point
+		flying = false
+		tookOff = false
+		land()
+		
+		plr.currentPlanet = body
+		
+		plr.global_position = global_position
+		plr.velocity = Vector2.ZERO
+		plr.visible = true
+		
+		plr.camera_2d.make_current()
+		plr.camera_2d.reset_smoothing()
+		
+		plr.set_physics_process(true)
+		
+		plr = null
+
+func _on_body_exited(body: Node2D) -> void:
+	if body is player and not flying:
+		$Label.visible = false
+		plr = null
+		
+
+
+func _on_take_off_timeout() -> void:
+	tookOff = true
+	$CPUParticles2D.restart()
