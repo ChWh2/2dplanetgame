@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://g0uiiq7672w1"]
+[gd_scene load_steps=7 format=3 uid="uid://g0uiiq7672w1"]
 
 [ext_resource type="PackedScene" uid="uid://bt64bj0v1ccji" path="res://Scenes/planet.tscn" id="1_4teii"]
 [ext_resource type="PackedScene" uid="uid://cfhrogonp7by0" path="res://Scenes/player.tscn" id="2_jxql8"]
 [ext_resource type="Texture2D" uid="uid://c6eekm3dti5ua" path="res://Assets/360_F_215948377_kgIhNUy4X0iYsyUfYd9KKIViSPOxclbC.jpg" id="3_eqvlc"]
 [ext_resource type="PackedScene" uid="uid://c5v57mj8ck34t" path="res://Scenes/rocket.tscn" id="4_65s3p"]
+[ext_resource type="Script" path="res://Scenes/asteroids.gd" id="4_uiwh1"]
+[ext_resource type="PackedScene" uid="uid://brfx1g5x5e12r" path="res://Scenes/asteroid.tscn" id="5_vmjm2"]
 
 [node name="Space" type="Node2D"]
 
@@ -15,9 +17,10 @@ texture = ExtResource("3_eqvlc")
 region_enabled = true
 region_rect = Rect2(0, 0, 1e+06, 1e+06)
 
-[node name="Rocket" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("4_65s3p")]
+[node name="Rocket" parent="." node_paths=PackedStringArray("currentPlanet", "planets") instance=ExtResource("4_65s3p")]
 position = Vector2(86, -513)
 currentPlanet = NodePath("../Planets/Planet")
+planets = [NodePath("../Planets/Planet"), NodePath("../Planets/Planet2")]
 
 [node name="Player" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("2_jxql8")]
 position = Vector2(0, -542)
@@ -29,3 +32,15 @@ currentPlanet = NodePath("../Planets/Planet")
 
 [node name="Planet2" parent="Planets" instance=ExtResource("1_4teii")]
 position = Vector2(-1600, -1000)
+
+[node name="Asteroids" type="Node2D" parent="." node_paths=PackedStringArray("follow")]
+position = Vector2(0, -542)
+script = ExtResource("4_uiwh1")
+asteroidTemplate = ExtResource("5_vmjm2")
+follow = NodePath("../Rocket")
+
+[node name="Timer" type="Timer" parent="Asteroids"]
+wait_time = 0.01
+autostart = true
+
+[connection signal="timeout" from="Asteroids/Timer" to="Asteroids" method="_on_timer_timeout"]

@@ -16,9 +16,22 @@ var angularVelocity = 0.0
 @onready var take_off: Timer = $takeOff
 
 @export var currentPlanet : planet
+@export var planets : Array[planet]
+
+@export var arrowTemplate : PackedScene
+
+@export var asteroidSpawner : Node2D
+
+var arrows : Array[arrow]
 
 func _ready():
 	land()
+	
+	for i in planets:
+		var newArrow = arrowTemplate.instantiate()
+		newArrow.lookAt = i
+		$ArrowHolder.add_child(newArrow)
+		arrows.append(newArrow)
 
 func land() -> void:
 	velocity = 0.0
@@ -62,6 +75,9 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		flying = false
 		tookOff = false
+		
+		$CPUParticles2D.emitting = false
+
 		land()
 		
 		plr.currentPlanet = body

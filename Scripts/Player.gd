@@ -14,7 +14,7 @@ var rawPosition : Vector2
 func _ready() -> void:
 	camera_2d.make_current()
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	#look at planet
 	var lookatVector = Vector2(currentPlanet.global_position.y - global_position.y, global_position.x - currentPlanet.global_position.x)
 	look_at(lookatVector + global_position)
@@ -30,7 +30,6 @@ func _physics_process(delta: float) -> void:
 			sprite_2d.flip_h = false
 		
 		var velVector = direction * SPEED * Vector2(cos(rotation), sin(rotation))
-		var velDir = velVector.normalized()
 		
 		if velocity == velVector:
 			velocity.x = move_toward(velocity.x, velVector.x, SPEED/2.0)

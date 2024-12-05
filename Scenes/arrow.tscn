@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://divbiceu6d2d6"]
+
+[ext_resource type="Texture2D" uid="uid://db2wlrqf3avhc" path="res://Assets/Arrow.png" id="1_ahlty"]
+[ext_resource type="Script" path="res://Scripts/arrow.gd" id="2_oqvrc"]
+[ext_resource type="FontFile" uid="uid://do0tmjdsjqtf0" path="res://Assets/Tiny5-Regular.ttf" id="3_bucq5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_xofki"]
+font = ExtResource("3_bucq5")
+font_size = 8
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Arrow" type="Sprite2D"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("1_ahlty")
+offset = Vector2(50, 0.5)
+script = ExtResource("2_oqvrc")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -1.0
+offset_top = -11.0
+offset_right = 47.0
+offset_bottom = 13.0
+text = "DISTANCE"
+label_settings = SubResource("LabelSettings_xofki")
+horizontal_alignment = 2
+vertical_alignment = 1
