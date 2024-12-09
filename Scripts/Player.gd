@@ -11,6 +11,12 @@ var rawPosition : Vector2
 
 @export var currentPlanet : planet
 
+var materials : int = 0
+
+var hasStormShields = false
+var hasFloatationDevice = false
+var hasHoloDisruptor = false
+
 func _ready() -> void:
 	camera_2d.make_current()
 
@@ -47,3 +53,6 @@ func _physics_process(_delta: float) -> void:
 	
 	var stickDir = currentPlanet.global_position.direction_to(global_position)
 	global_position = currentPlanet.global_position + stickDir * (currentPlanet.radius * 2.0 + 16.0)
+
+func addMaterial(i : int):
+	materials += i

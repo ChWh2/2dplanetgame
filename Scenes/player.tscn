@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cfhrogonp7by0"]
+[gd_scene load_steps=11 format=3 uid="uid://cfhrogonp7by0"]
 
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_ywnlj"]
 [ext_resource type="Texture2D" uid="uid://83uimhnrduie" path="res://Assets/Astronaut.png" id="2_wu33n"]
+[ext_resource type="FontFile" uid="uid://do0tmjdsjqtf0" path="res://Assets/Tiny5-Regular.ttf" id="3_str20"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0q4pe"]
 atlas = ExtResource("2_wu33n")
@@ -40,6 +41,20 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e3fym"]
 size = Vector2(26, 30)
 
+[sub_resource type="LabelSettings" id="LabelSettings_si2af"]
+font = ExtResource("3_str20")
+font_size = 32
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_3yt8a"]
+resource_name = "textLink"
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = str(\"Materials: \", $\"../..\".materials)
+"
+
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_ywnlj")
@@ -61,3 +76,12 @@ position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 rotation_smoothing_enabled = true
 rotation_smoothing_speed = 10.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Materials"
+label_settings = SubResource("LabelSettings_si2af")
+script = SubResource("GDScript_3yt8a")

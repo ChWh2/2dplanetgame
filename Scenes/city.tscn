@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3 uid="uid://y2y7yd5upx3e"]
+
+[ext_resource type="Script" path="res://Scripts/planet.gd" id="1_g14nk"]
+[ext_resource type="Texture2D" uid="uid://dh53cmd2iadk" path="res://Assets/Wormhole.png" id="2_qsiwi"]
+[ext_resource type="Shader" path="res://planet.gdshader" id="3_forqm"]
+
+[sub_resource type="Gradient" id="Gradient_6jhk5"]
+offsets = PackedFloat32Array(0.636364, 0.87013, 1)
+colors = PackedColorArray(0, 0.619608, 1, 1, 0, 0.419608, 1, 1, 0, 0.419608, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tn51m"]
+gradient = SubResource("Gradient_6jhk5")
+width = 750
+height = 750
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_csc6h"]
+radius = 500.0
+
+[sub_resource type="GDScript" id="GDScript_kxed3"]
+script/source = "extends Area2D
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is player:
+		get_tree().call_deferred(\"change_scene_to_file\", \"res://Scenes/win_screen.tscn\")
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20sma"]
+size = Vector2(36, 56.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x14c"]
+shader = ExtResource("3_forqm")
+
+[sub_resource type="Gradient" id="Gradient_hv6di"]
+colors = PackedColorArray(0, 0.164706, 0, 1, 0.235294, 0.788235, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tcs5n"]
+noise_type = 3
+seed = 3
+frequency = 0.02
+fractal_type = 3
+fractal_octaves = 7
+fractal_lacunarity = 3.0
+fractal_gain = 1.13
+fractal_weighted_strength = 0.59
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_g2ehj"]
+width = 500
+height = 500
+color_ramp = SubResource("Gradient_hv6di")
+noise = SubResource("FastNoiseLite_tcs5n")
+
+[node name="City" type="StaticBody2D"]
+script = ExtResource("1_g14nk")
+radius = 250.0
+color = Color(0.141176, 0.537255, 0.6, 1)
+requirements = Array[int]([2])
+
+[node name="Attmosphere" type="Sprite2D" parent="."]
+z_index = -1
+scale = Vector2(2, 2)
+texture = SubResource("GradientTexture2D_tn51m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_csc6h")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+z_index = -1
+texture_filter = 1
+position = Vector2(0, -551)
+scale = Vector2(2, 2)
+texture = ExtResource("2_qsiwi")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D2"]
+script = SubResource("GDScript_kxed3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D2/Area2D"]
+position = Vector2(0, -3.25)
+shape = SubResource("RectangleShape2D_20sma")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_2x14c")
+scale = Vector2(2, 2)
+texture = SubResource("NoiseTexture2D_g2ehj")
+
+[connection signal="body_entered" from="Sprite2D2/Area2D" to="Sprite2D2/Area2D" method="_on_body_entered"]

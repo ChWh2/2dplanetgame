@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://c5v57mj8ck34t"]
+[gd_scene load_steps=13 format=3 uid="uid://c5v57mj8ck34t"]
 
 [ext_resource type="Texture2D" uid="uid://diuj5iqswx4os" path="res://Assets/Rocket.png" id="1_033wf"]
 [ext_resource type="Script" path="res://Scripts/rocket.gd" id="1_sg4jg"]
 [ext_resource type="PackedScene" uid="uid://divbiceu6d2d6" path="res://Scenes/arrow.tscn" id="2_2v0lh"]
 [ext_resource type="FontFile" uid="uid://do0tmjdsjqtf0" path="res://Assets/Tiny5-Regular.ttf" id="3_laq6e"]
+[ext_resource type="Script" path="res://Scripts/upgrade_ui.gd" id="5_gumk7"]
 
 [sub_resource type="Gradient" id="Gradient_xnt0w"]
 offsets = PackedFloat32Array(1)
@@ -25,6 +26,19 @@ size = Vector2(70, 88)
 font = ExtResource("3_laq6e")
 outline_size = 5
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_x0837"]
+font = ExtResource("3_laq6e")
+font_size = 32
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_g55vt"]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = str(round($\"../ProgressBar\".value / $\"../ProgressBar\".max_value * 100), \"%\")
+"
 
 [node name="Rocket" type="Area2D"]
 script = ExtResource("1_sg4jg")
@@ -79,19 +93,137 @@ one_shot = true
 visible = false
 z_index = 5
 texture_filter = 1
-offset_left = -28.0
-offset_top = -50.0
-offset_right = 28.0
-offset_bottom = -27.0
-text = "ENTER?"
+offset_left = -61.0
+offset_top = -117.0
+offset_right = 61.0
+offset_bottom = -78.0
+text = "SPACE - FLY"
 label_settings = SubResource("LabelSettings_pf0gp")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ArrowHolder" type="Node2D" parent="."]
+visible = false
 z_index = 5
 position = Vector2(0, -40)
+
+[node name="UpgradeUI" type="Control" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = 24.0
+offset_top = -81.0
+offset_right = 64.0
+offset_bottom = -41.0
+script = ExtResource("5_gumk7")
+
+[node name="ColorRect" type="ColorRect" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = -3.0
+offset_right = 81.0
+offset_bottom = 76.0
+color = Color(0.529067, 0.529067, 0.529067, 0.756863)
+
+[node name="Label" type="Label" parent="UpgradeUI"]
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 19.0
+text = "UPGRADES"
+label_settings = SubResource("LabelSettings_pf0gp")
+
+[node name="Oxygen" type="Button" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 24.0
+offset_right = 51.0
+offset_bottom = 49.0
+
+[node name="Label" type="Label" parent="UpgradeUI/Oxygen"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 54.0
+offset_bottom = 21.0
+text = "Oxygen"
+label_settings = SubResource("LabelSettings_pf0gp")
+
+[node name="Fuel" type="Button" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 50.0
+offset_right = 51.0
+offset_bottom = 75.0
+
+[node name="Label" type="Label" parent="UpgradeUI/Fuel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 51.0
+offset_bottom = 21.0
+text = "Speed"
+label_settings = SubResource("LabelSettings_pf0gp")
+horizontal_alignment = 1
+
+[node name="Oxygenlabel" type="Label" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 25.0
+offset_right = 80.0
+offset_bottom = 48.0
+text = "1"
+label_settings = SubResource("LabelSettings_pf0gp")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Fuellabel" type="Label" parent="UpgradeUI"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 50.0
+offset_right = 80.0
+offset_bottom = 73.0
+text = "1"
+label_settings = SubResource("LabelSettings_pf0gp")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = 46.0
+offset_top = 592.0
+offset_right = 219.0
+offset_bottom = 646.0
+max_value = 10.0
+value = 10.0
+show_percentage = false
+
+[node name="Label2" type="Label" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = 46.0
+offset_top = 592.0
+offset_right = 219.0
+offset_bottom = 646.0
+text = "100%"
+label_settings = SubResource("LabelSettings_x0837")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_g55vt")
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = 2.0
+offset_top = 592.0
+offset_right = 160.0
+offset_bottom = 646.0
+text = "O2:"
+label_settings = SubResource("LabelSettings_x0837")
+vertical_alignment = 1
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
 [connection signal="timeout" from="takeOff" to="." method="_on_take_off_timeout"]
+[connection signal="pressed" from="UpgradeUI/Oxygen" to="UpgradeUI" method="_on_oxygen_pressed"]
+[connection signal="pressed" from="UpgradeUI/Fuel" to="UpgradeUI" method="_on_fuel_pressed"]

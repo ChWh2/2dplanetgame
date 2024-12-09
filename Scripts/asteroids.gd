@@ -6,6 +6,8 @@ const spawnRadius = 2000
 const initialCount = 100
 
 const maxRotSpeed = 20.0
+const minSpeed = 100.0
+const maxSpeed = 200.0
 
 @export var asteroidTemplate : PackedScene
 @export var follow : Node2D
@@ -31,13 +33,15 @@ func spawn():
 		var angularVelocity = randf_range(-maxRotSpeed, maxRotSpeed)
 		
 		newAsteroid.global_position = global_position + rad * Vector2(cos(theta), sin(theta))
+		
+		var velocity = Vector2(1,1) * randf_range(minSpeed, maxSpeed)
+		
 		newAsteroid.angular_velocity = angularVelocity
+		newAsteroid.linear_velocity = velocity
 		
 		asteroids.append(newAsteroid)
 		
 func _physics_process(_delta: float) -> void:
-	print(asteroids.size())
-	
 	global_position = follow.global_position
 	for i in asteroids:
 		if i.position.length() > spawnRadius:

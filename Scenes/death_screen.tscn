@@ -1,0 +1,88 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8pwwxi7du6hl"]
+
+[ext_resource type="Texture2D" uid="uid://c6eekm3dti5ua" path="res://Assets/360_F_215948377_kgIhNUy4X0iYsyUfYd9KKIViSPOxclbC.jpg" id="1_5v5wb"]
+[ext_resource type="FontFile" uid="uid://do0tmjdsjqtf0" path="res://Assets/Tiny5-Regular.ttf" id="2_m0rd7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ay47i"]
+font = ExtResource("2_m0rd7")
+font_size = 160
+
+[sub_resource type="LabelSettings" id="LabelSettings_05tr2"]
+font = ExtResource("2_m0rd7")
+font_size = 40
+
+[sub_resource type="GDScript" id="GDScript_bcugg"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _init() -> void:
+	text = Constants.deathMessage
+"
+
+[sub_resource type="GDScript" id="GDScript_qprxc"]
+script/source = "extends Button
+
+func _on_pressed() -> void:
+	Constants.startGame()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_ag7r1"]
+font = ExtResource("2_m0rd7")
+font_size = 120
+
+[node name="Death Screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_5v5wb")
+
+[node name="Title" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 246.0
+offset_top = 50.0
+offset_right = 906.0
+offset_bottom = 230.0
+text = "YOU DIED"
+label_settings = SubResource("LabelSettings_ay47i")
+
+[node name="Reason" type="Label" parent="."]
+texture_filter = 1
+offset_left = 246.0
+offset_top = 230.0
+offset_right = 906.0
+offset_bottom = 410.0
+label_settings = SubResource("LabelSettings_05tr2")
+horizontal_alignment = 1
+autowrap_mode = 2
+script = SubResource("GDScript_bcugg")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 417.0
+offset_right = 906.0
+offset_bottom = 557.0
+script = SubResource("GDScript_qprxc")
+
+[node name="Title" type="Label" parent="Button"]
+texture_filter = 1
+offset_right = 660.0
+offset_bottom = 180.0
+text = "RETRY"
+label_settings = SubResource("LabelSettings_ag7r1")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

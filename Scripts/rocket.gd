@@ -6,9 +6,6 @@ var plr : player
 var flying = false
 var tookOff = false
 
-const SPEED = 300.0
-const ROTSPEED = 3.0
-
 var velocity = 0.0
 var angularVelocity = 0.0
 
@@ -16,7 +13,7 @@ var angularVelocity = 0.0
 @onready var take_off: Timer = $takeOff
 
 @export var currentPlanet : planet
-@export var planets : Array[planet]
+var planets : Array[planet]
 
 @export var arrowTemplate : PackedScene
 
@@ -24,12 +21,28 @@ var angularVelocity = 0.0
 
 var arrows : Array[arrow]
 
+var oxygenvalue : int = 0
+var speedvalue : int = 0
+
+const startingOxygen = 20.0
+const oxygenMultiplier = 2.0
+
+const startingSpeed = 300.0
+const speedMultiplier = 10.0
+const startingRotSpeed = 3.0
+const rotSpeedMultiplier = 0.1
+
 func _ready():
+	for i in $"../Planets".get_children():
+		if i is planet:
+			planets.append(i)
+	
 	land()
 	
 	for i in planets:
 		var newArrow = arrowTemplate.instantiate()
 		newArrow.lookAt = i
+		newArrow.modulate = i.color
 		$ArrowHolder.add_child(newArrow)
 		arrows.append(newArrow)
 
@@ -44,12 +57,20 @@ func land() -> void:
 	global_position = currentPlanet.global_position + stickDir * (currentPlanet.radius * 2.0)
 
 func fly(delta : float):
+	var calculatedVelocity = startingSpeed + (speedvalue * speedMultiplier)
+	var calculatedRotVelocity = startingRotSpeed + (speedvalue * rotSpeedMultiplier)
+	
+	$CanvasLayer/ProgressBar.value -= delta
+	
+	if $CanvasLayer/ProgressBar.value <= 0:
+		Constants.die("You ran out of oxygen and suffocated")
+	
 	var direction := Input.get_axis("Left", "Right")
-	angularVelocity = move_toward(angularVelocity, ROTSPEED, ROTSPEED/200.0)
+	angularVelocity = move_toward(angularVelocity, calculatedRotVelocity, calculatedRotVelocity/200.0)
 	if direction:
 		rotate(direction * delta * angularVelocity)
 	
-	velocity = move_toward(velocity, SPEED, SPEED/200.0)
+	velocity = move_toward(velocity, calculatedVelocity, calculatedVelocity/200.0)
 	position += delta * velocity * Vector2(sin(rotation), -cos(rotation))
 
 func _physics_process(delta: float) -> void:
@@ -58,26 +79,47 @@ func _physics_process(delta: float) -> void:
 	
 	elif Input.is_action_just_pressed("Interact") and plr and not flying:
 		$Label.visible = false
+		$UpgradeUI.visible = false
 		plr.set_physics_process(false)
 		plr.visible = false
 		camera_2d.make_current()
 		flying = true
 		take_off.start()
+		$ArrowHolder.visible = true
+		
+		$CanvasLayer.visible = true
+		
+		var calculatedOxygen = startingOxygen + (oxygenMultiplier * oxygenvalue)
+		
+		$CanvasLayer/ProgressBar.max_value = calculatedOxygen
+		$CanvasLayer/ProgressBar.value = calculatedOxygen
 
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is player and not flying:
 		$Label.visible = true
+		$UpgradeUI.visible = true
 		plr = body
-	elif flying and body is planet:
+	elif body is planet and flying:
+		if !body.requirements.find(body.requirement.stormShields) and !plr.hasStormShields:
+			Constants.die("The storm causes you to crash")
+		if !body.requirements.find(body.requirement.floatationDevice) and !plr.hasFloatationDevice:
+			Constants.die("You plunge into the ocean, run out of air, and suffocate")
+		if !body.requirements.find(body.requirement.holoDisruptor) and !plr.hasHoloDisruptor:
+			Constants.die("You strangely fly through the planet and crash")
+		
 		$Label.visible = true
+		$UpgradeUI.visible = true
 		currentPlanet = body
 		
 		flying = false
 		tookOff = false
 		
 		$CPUParticles2D.emitting = false
-
+		
+		$ArrowHolder.visible = false
+		$CanvasLayer.visible = false
+		
 		land()
 		
 		plr.currentPlanet = body
@@ -92,14 +134,19 @@ func _on_body_entered(body: Node2D) -> void:
 		plr.set_physics_process(true)
 		
 		plr = null
+	elif body is asteroid and flying:
+		body.tellCrash()
+		plr.addMaterial(1)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is player and not flying:
 		$Label.visible = false
+		$UpgradeUI.visible = false
 		plr = null
 		
 
 
 func _on_take_off_timeout() -> void:
-	tookOff = true
 	$CPUParticles2D.restart()
+	
+	tookOff = true
