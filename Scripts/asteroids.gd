@@ -9,6 +9,8 @@ const maxRotSpeed = 20.0
 const minSpeed = 100.0
 const maxSpeed = 200.0
 
+const maxCount : int = 150
+
 @export var asteroidTemplate : PackedScene
 @export var follow : Node2D
 
@@ -19,6 +21,7 @@ var asteroids : Array[asteroid]
 		#spawn()
 
 func _on_timer_timeout() -> void:
+	if 
 	spawn()
 
 func spawn():
@@ -48,7 +51,8 @@ func _physics_process(_delta: float) -> void:
 			crashed(i)
 
 func crashed(obj : asteroid):
-	var i = asteroids.find(obj)
-	if asteroids[i]:
-		asteroids.remove_at(i)
-	obj.queue_free()
+	var i = asteroids.find(obj) + 1
+	print(get_children().size())
+	if i:
+		asteroids.remove_at(i - 1)
+		

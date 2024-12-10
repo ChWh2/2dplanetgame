@@ -44,6 +44,7 @@ texture = ExtResource("1_gtwlo")
 
 [node name="Title" type="Label" parent="."]
 texture_filter = 1
+layout_mode = 0
 offset_top = 50.0
 offset_right = 1152.0
 offset_bottom = 323.0
@@ -53,6 +54,7 @@ horizontal_alignment = 1
 autowrap_mode = 1
 
 [node name="Button" type="Button" parent="."]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 249.0
 offset_right = 906.0
@@ -61,6 +63,7 @@ script = SubResource("GDScript_0wteo")
 
 [node name="Title" type="Label" parent="Button"]
 texture_filter = 1
+layout_mode = 0
 offset_right = 660.0
 offset_bottom = 180.0
 text = "Start"
@@ -68,6 +71,7 @@ label_settings = SubResource("LabelSettings_nnnhw")
 horizontal_alignment = 1
 
 [node name="Button2" type="Button" parent="."]
+layout_mode = 0
 offset_left = 246.0
 offset_top = 417.0
 offset_right = 906.0
@@ -76,6 +80,7 @@ script = SubResource("GDScript_5vs6j")
 
 [node name="Title" type="Label" parent="Button2"]
 texture_filter = 1
+layout_mode = 0
 offset_right = 660.0
 offset_bottom = 180.0
 text = "Quit"

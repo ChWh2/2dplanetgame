@@ -17,13 +17,15 @@ func _process(_delta: float) -> void:
 
 
 func _on_oxygen_pressed() -> void:
-	if rocketOBJ.plr.materials > 0:
-		oxygenvalue += 1
-		rocketOBJ.oxygenvalue += 1
-		rocketOBJ.plr.addMaterial(-1)
+	if rocketOBJ.plr:
+		if rocketOBJ.plr.materials > 0:
+			oxygenvalue += 1
+			rocketOBJ.oxygenvalue += 1
+			rocketOBJ.plr.addMaterial(-1)
 
 func _on_fuel_pressed() -> void:
-	if rocketOBJ.plr.materials > 0:
-		speedvalue += 1
-		rocketOBJ.speedvalue += 1
-		rocketOBJ.plr.addMaterial(-1)
+	if rocketOBJ.plr:
+		if rocketOBJ.plr.materials > 0:
+			speedvalue += 1
+			rocketOBJ.speedvalue += 1
+			rocketOBJ.plr.addMaterial(-1)

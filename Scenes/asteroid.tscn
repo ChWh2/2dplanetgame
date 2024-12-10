@@ -1,10 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://brfx1g5x5e12r"]
+[gd_scene load_steps=7 format=3 uid="uid://brfx1g5x5e12r"]
 
 [ext_resource type="Texture2D" uid="uid://c2187jku346bk" path="res://Assets/Asteroid.png" id="1_olltt"]
 [ext_resource type="Script" path="res://Scripts/asteroid.gd" id="1_xdmjg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rtrms"]
 radius = 30.0
+
+[sub_resource type="Gradient" id="Gradient_xnt0w"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pqjx7"]
+gradient = SubResource("Gradient_xnt0w")
+width = 2
+height = 2
+
+[sub_resource type="Gradient" id="Gradient_jsy1h"]
+offsets = PackedFloat32Array(0.266667, 1)
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
 
 [node name="Asteroid" type="RigidBody2D"]
 collision_layer = 3
@@ -24,4 +37,27 @@ texture = ExtResource("1_olltt")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_rtrms")
 
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, 3)
+rotation = 1.5708
+emitting = false
+amount = 2000
+lifetime = 0.31
+lifetime_randomness = 0.44
+texture = SubResource("GradientTexture2D_pqjx7")
+emission_shape = 3
+emission_rect_extents = Vector2(8, 0)
+particle_flag_align_y = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+damping_min = 0.1
+damping_max = 0.1
+color_ramp = SubResource("Gradient_jsy1h")
+
+[node name="Kaboom" type="Timer" parent="."]
+wait_time = 0.1
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Kaboom" to="." method="_on_kaboom_timeout"]
