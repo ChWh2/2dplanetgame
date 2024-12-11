@@ -222,6 +222,7 @@ text = "O2:"
 label_settings = SubResource("LabelSettings_x0837")
 vertical_alignment = 1
 
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
 [connection signal="timeout" from="takeOff" to="." method="_on_take_off_timeout"]

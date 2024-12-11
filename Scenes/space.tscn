@@ -152,7 +152,7 @@ asteroidTemplate = ExtResource("5_vmjm2")
 follow = NodePath("../Rocket")
 
 [node name="Timer" type="Timer" parent="Asteroids"]
-wait_time = 0.05
+wait_time = 0.1
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

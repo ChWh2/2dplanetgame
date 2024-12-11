@@ -134,9 +134,6 @@ func _on_body_entered(body: Node2D) -> void:
 		plr.set_physics_process(true)
 		
 		plr = null
-	elif body is asteroid and flying:
-		body.tellCrash()
-		plr.addMaterial(1)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is player and not flying:
@@ -150,3 +147,9 @@ func _on_take_off_timeout() -> void:
 	$CPUParticles2D.restart()
 	
 	tookOff = true
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if area is asteroid and flying:
+		area.tellCrash()
+		plr.addMaterial(1)
