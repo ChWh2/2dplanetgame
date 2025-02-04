@@ -122,7 +122,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1e+06, 1e+06)
 
 [node name="Rocket" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("4_65s3p")]
-position = Vector2(233, -472)
+position = Vector2(257, -473)
 currentPlanet = NodePath("../Planets/Planet")
 
 [node name="Player" parent="." node_paths=PackedStringArray("currentPlanet") instance=ExtResource("2_jxql8")]

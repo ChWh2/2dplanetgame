@@ -27,7 +27,6 @@ func _on_body_entered(_body: Node) -> void:
 
 
 func _on_kaboom_timeout() -> void:
-	$Kaboom
 	crashed.emit(self)
 
 func offset(xy : Vector2):

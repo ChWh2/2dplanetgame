@@ -56,6 +56,8 @@ func _process(_delta: float) -> void:
 "
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_ywnlj")
 
@@ -85,3 +87,7 @@ offset_bottom = 23.0
 text = "Materials"
 label_settings = SubResource("LabelSettings_si2af")
 script = SubResource("GDScript_3yt8a")
+
+[node name="GroundCast" type="RayCast2D" parent="."]
+position = Vector2(0, -50)
+target_position = Vector2(0, 200)

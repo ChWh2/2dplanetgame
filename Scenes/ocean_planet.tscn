@@ -1,8 +1,20 @@
-[gd_scene load_steps=13 format=3 uid="uid://33yprxrvu5m"]
+[gd_scene load_steps=15 format=3 uid="uid://33yprxrvu5m"]
 
 [ext_resource type="Script" path="res://Scripts/planet.gd" id="1_lgma7"]
 [ext_resource type="Texture2D" uid="uid://c1pcrup8e8vog" path="res://Assets/HoloDisruptor.png" id="2_lowmn"]
-[ext_resource type="Shader" path="res://planet.gdshader" id="3_2wlv4"]
+[ext_resource type="Shader" path="res://Scenes/ocean_planet.gdshader" id="3_sv588"]
+
+[sub_resource type="Gradient" id="Gradient_hvnvp"]
+colors = PackedColorArray(0.276132, 0.276131, 1.92523e-07, 1, 0.329677, 0.162379, 1.92523e-07, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jfj8n"]
+seed = 12
+frequency = 0.02
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_g1v10"]
+seamless = true
+color_ramp = SubResource("Gradient_hvnvp")
+noise = SubResource("FastNoiseLite_jfj8n")
 
 [sub_resource type="Gradient" id="Gradient_usl0m"]
 offsets = PackedFloat32Array(0.636364, 0.87013, 1)
@@ -16,9 +28,6 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_csc6h"]
-radius = 500.0
-
 [sub_resource type="GDScript" id="GDScript_acfj7"]
 script/source = "extends Area2D
 
@@ -31,11 +40,11 @@ func _on_body_entered(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_20sma"]
 size = Vector2(36, 56.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x14c"]
-shader = ExtResource("3_2wlv4")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m1ucr"]
+shader = ExtResource("3_sv588")
 
 [sub_resource type="Gradient" id="Gradient_j5kym"]
-colors = PackedColorArray(0, 0.243137, 1, 1, 0.235687, 0.000241905, 0.696732, 1)
+colors = PackedColorArray(0, 0.243137, 1, 1, 0.235294, 0, 0.698039, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_febbu"]
 noise_type = 3
@@ -55,17 +64,16 @@ noise = SubResource("FastNoiseLite_febbu")
 
 [node name="OceanPlanet" type="StaticBody2D"]
 script = ExtResource("1_lgma7")
-radius = 250.0
+radius = 490.0
+maxRadChange = 2.0
 color = Color(0.241353, 0.523721, 1, 1)
+texture = SubResource("NoiseTexture2D_g1v10")
 requirements = Array[int]([1])
 
 [node name="Attmosphere" type="Sprite2D" parent="."]
 z_index = -1
 scale = Vector2(2, 2)
 texture = SubResource("GradientTexture2D_0d0k6")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_csc6h")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -74,14 +82,17 @@ scale = Vector2(2, 2)
 texture = ExtResource("2_lowmn")
 
 [node name="Area2D" type="Area2D" parent="Sprite2D2"]
+collision_layer = 0
+collision_mask = 2
 script = SubResource("GDScript_acfj7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D2/Area2D"]
 shape = SubResource("RectangleShape2D_20sma")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
 texture_filter = 1
-material = SubResource("ShaderMaterial_2x14c")
+material = SubResource("ShaderMaterial_m1ucr")
 scale = Vector2(2, 2)
 texture = SubResource("NoiseTexture2D_3pe0r")
 

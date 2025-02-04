@@ -23,6 +23,10 @@ Constants="*res://Scripts/constants.gd"
 
 window/stretch/mode="viewport"
 
+[dotnet]
+
+project/assembly_name="2DPlanetGame"
+
 [input]
 
 Left={
@@ -47,3 +51,7 @@ Interact={
 
 2d/default_gravity=0.0
 2d/default_gravity_vector=Vector2(0, 0)
+
+[rendering]
+
+textures/canvas_textures/default_texture_repeat=1

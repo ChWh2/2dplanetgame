@@ -21,8 +21,8 @@ var planets : Array[planet]
 
 var arrows : Array[arrow]
 
-var oxygenvalue : int = 0
-var speedvalue : int = 0
+var oxygenvalue : int = 100
+var speedvalue : int = 100
 
 const startingOxygen = 20.0
 const oxygenMultiplier = 2.0
@@ -36,8 +36,6 @@ func _ready():
 	for i in $"../Planets".get_children():
 		if i is planet:
 			planets.append(i)
-	
-	land()
 	
 	for i in planets:
 		var newArrow = arrowTemplate.instantiate()
@@ -54,7 +52,8 @@ func land() -> void:
 	look_at(lookatVector + global_position)
 	
 	var stickDir = currentPlanet.global_position.direction_to(global_position)
-	global_position = currentPlanet.global_position + stickDir * (currentPlanet.radius * 2.0)
+	$GroundCast.force_raycast_update()
+	global_position = $GroundCast.get_collision_point()
 
 func fly(delta : float):
 	var calculatedVelocity = startingSpeed + (speedvalue * speedMultiplier)
@@ -93,6 +92,8 @@ func _physics_process(delta: float) -> void:
 		
 		$CanvasLayer/ProgressBar.max_value = calculatedOxygen
 		$CanvasLayer/ProgressBar.value = calculatedOxygen
+	else:
+		land()
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -102,11 +103,11 @@ func _on_body_entered(body: Node2D) -> void:
 		plr = body
 	elif body is planet and flying:
 		if !body.requirements.find(body.requirement.stormShields) and !plr.hasStormShields:
-			Constants.die("The storm causes you to crash")
+			Constants.die("The storm causes you to crash. Hint: Try to explore mars")
 		if !body.requirements.find(body.requirement.floatationDevice) and !plr.hasFloatationDevice:
-			Constants.die("You plunge into the ocean, run out of air, and suffocate")
+			Constants.die("You plunge into the ocean, run out of air, and suffocate. Hint: Try to explore the purple planet")
 		if !body.requirements.find(body.requirement.holoDisruptor) and !plr.hasHoloDisruptor:
-			Constants.die("You strangely fly through the planet and crash")
+			Constants.die("You fly through the planet. Hint: Try to explore the ocean planet")
 		
 		$Label.visible = true
 		$UpgradeUI.visible = true

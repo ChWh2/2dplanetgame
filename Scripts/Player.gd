@@ -51,8 +51,11 @@ func _physics_process(_delta: float) -> void:
 	
 	#stick to floor
 	
+	
 	var stickDir = currentPlanet.global_position.direction_to(global_position)
-	global_position = currentPlanet.global_position + stickDir * (currentPlanet.radius * 2.0 + 16.0)
+	
+	$GroundCast.force_raycast_update()
+	global_position = stickDir * 16 + $GroundCast.get_collision_point()
 
 func addMaterial(i : int):
 	materials += i

@@ -55,7 +55,6 @@ func _physics_process(_delta: float) -> void:
 
 func crashed(obj : asteroid):
 	var i = asteroids.find(obj) + 1
-	print(get_children().size())
 	if i:
 		asteroids.remove_at(i - 1)
 	
